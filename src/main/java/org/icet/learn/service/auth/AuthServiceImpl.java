@@ -1,5 +1,6 @@
 package org.icet.learn.service.auth;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.icet.learn.dto.SignupRequest;
 import org.icet.learn.dto.User;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
-    private UserDao userDao;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final UserDao userDao;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public User createUser(SignupRequest signupRequest) {
@@ -39,6 +41,20 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public Boolean hasUserWithEmail(String email) {
         return userDao.findFirstByEmail(email).isPresent();
+    }
+
+    @PostConstruct
+    @Override
+    public void createAdminAccount(){
+        UserEntity adminAccount = userDao.findByRole(UserRole.ADMIN);
+        if(null == adminAccount){
+            UserEntity user = new UserEntity();
+            user.setEmail("admin@gmail.com");
+            user.setName("admin");
+            user.setRole(UserRole.ADMIN);
+            user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            userDao.save(user);
+        }
     }
 
 }
