@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -30,5 +30,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 new ArrayList<>()
         );
     }
-
 }
