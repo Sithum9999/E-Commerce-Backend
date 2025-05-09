@@ -52,22 +52,30 @@ public class AuthController {
                             authenticationRequest.getPassword()
                     )
             );
+
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Incorrect username or password.");
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
         Optional<UserEntity> optionalUser = userDao.findFirstByEmail(userDetails.getUsername());
+
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
         if (optionalUser.isPresent()) {
+
             response.getWriter().write(new JSONObject()
                     .put("userId", optionalUser.get().getId())
                     .put("role", optionalUser.get().getRole())
                     .toString()
             );
 
-        response.addHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
+            response.addHeader("Access-Control-Expose-Headers", HEADER_STRING);
+            response.addHeader("Access-Control-Allow-Headers", "Authorization, X-PIMGOTHEB, Origin, " +
+                    "X-Requested-With, Content-Type, Accept, X-Custom-header");
+            response.addHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
+
         }
     }
 
