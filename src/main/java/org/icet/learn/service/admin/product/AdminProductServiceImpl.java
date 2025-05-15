@@ -38,4 +38,9 @@ public class AdminProductServiceImpl implements AdminProductService {
         return all.stream().map(ProductEntity::getDto).collect(Collectors.toList());
     }
 
+    public List<Product> getAllProductByName(String name) {
+        List<ProductEntity> all = productDao.findAllByNameContaining(name);
+        return all.stream().map(ProductEntity::getDto).collect(Collectors.toList());
+    }
+
 }
