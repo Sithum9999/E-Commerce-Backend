@@ -41,6 +41,7 @@ public class ProductEntity {
         product.setDescription(description);
         product.setByteImg(img);
         product.setCategoryId(categoryEntity.getId());
+        product.setCategoryName(categoryEntity.getName());
         return product;
     }
 

@@ -18,6 +18,8 @@ public class Product {
 
     private Long categoryId;
 
+    private String categoryName;
+
     private MultipartFile img;
 
 }
