@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService{
         orderEntity.setAmount(0L);
         orderEntity.setTotalAmount(0L);
         orderEntity.setDiscount(0L);
-        orderEntity.setUserEntity(createdUser);
+        orderEntity.setUser(createdUser);
         orderEntity.setOrderStatus(OrderStatus.Pending);
         orderDao.save(orderEntity);
 
