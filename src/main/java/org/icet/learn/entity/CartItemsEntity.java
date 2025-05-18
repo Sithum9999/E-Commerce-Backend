@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.icet.learn.dto.CartItem;
 
 @Entity
 @Table(name = "cart_items")
@@ -32,5 +33,16 @@ public class CartItemsEntity {
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 
+    public CartItem getCartDto() {
+        CartItem cartItemsDto = new CartItem();
+        cartItemsDto.setId(id);
+        cartItemsDto.setPrice(price);
+        cartItemsDto.setProductId(product.getId());
+        cartItemsDto.setQuantity(quantity);
+        cartItemsDto.setUserId(user.getId());
+        cartItemsDto.setProductName(product.getName());
+        cartItemsDto.setReturnedImg(product.getImg());
+        return cartItemsDto;
+    }
 
 }
