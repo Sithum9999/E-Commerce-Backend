@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface CartItemDao extends JpaRepository<CartItemsEntity, Long> {
-    Optional<CartItemsEntity> findByProductEntityIdAndOrderEntityIdAndUserEntityId(Long productId, Long orderId, Long userId);
+    Optional<CartItemsEntity> findByProductIdAndOrderIdAndUserId(Long productId, Long orderId, Long userId);
 }
