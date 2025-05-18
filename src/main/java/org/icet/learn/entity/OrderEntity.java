@@ -36,9 +36,9 @@ public class OrderEntity {
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderEntity")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<CartItemsEntity> cartItems;
 }
 
