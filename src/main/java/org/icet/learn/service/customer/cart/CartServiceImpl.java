@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.CartItem;
+import org.icet.learn.dto.Order;
 import org.icet.learn.entity.CartItemsEntity;
 import org.icet.learn.entity.OrderEntity;
 import org.icet.learn.entity.ProductEntity;
@@ -17,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -84,6 +87,18 @@ public class CartServiceImpl implements CartService{
         return dto;
     }
 
+    public Order getCartByUserId(Long userId) {
+        OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
+        List<CartItem> cartItemsDtoList = activeOrder.getCartItems().stream().map(CartItemsEntity::getCartDto).collect(Collectors.toList());
+        Order orderDto = new Order();
+        orderDto.setAmount(activeOrder.getAmount());
+        orderDto.setId(activeOrder.getId());
+        orderDto.setOrderStatus(activeOrder.getOrderStatus());
+        orderDto.setDiscount(activeOrder.getDiscount());
+        orderDto.setTotalAmount(activeOrder.getTotalAmount());
+        orderDto.setCartItems(cartItemsDtoList);
 
+        return orderDto;
+    }
 
 }
