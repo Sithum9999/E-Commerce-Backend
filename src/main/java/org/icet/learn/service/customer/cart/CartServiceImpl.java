@@ -17,6 +17,7 @@ import org.icet.learn.repository.UserDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,9 @@ public class CartServiceImpl implements CartService{
 
     private final CartItemDao cartItemDao;
 
-    private final ProductDao productDao;
+    private final ProductDao productDao ;
 
+    @Transactional
     public ResponseEntity<?> addProductToCart(AddProductInCart addProductInCart) {
         OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(
                 addProductInCart.getUserId(), OrderStatus.Pending);
