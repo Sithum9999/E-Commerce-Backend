@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.Order;
+import org.icet.learn.exceptions.ValidationException;
 import org.icet.learn.service.customer.cart.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,16 @@ public class CartController {
         Order orderDto = cartService.getCartByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
     }
+
+    @GetMapping("/coupon/{userId}/{code}")
+    public ResponseEntity<?> applyCoupon(@PathVariable Long userId, @PathVariable String code) {
+        try {
+            Order order = cartService.applyCoupon(userId, code);
+            return ResponseEntity.ok(order);
+        } catch (ValidationException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
 
 }
