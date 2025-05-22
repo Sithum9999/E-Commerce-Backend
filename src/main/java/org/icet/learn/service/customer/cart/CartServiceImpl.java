@@ -5,20 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.CartItem;
 import org.icet.learn.dto.Order;
-import org.icet.learn.entity.CartItemsEntity;
-import org.icet.learn.entity.OrderEntity;
-import org.icet.learn.entity.ProductEntity;
-import org.icet.learn.entity.UserEntity;
+import org.icet.learn.entity.*;
 import org.icet.learn.enums.OrderStatus;
-import org.icet.learn.repository.CartItemDao;
-import org.icet.learn.repository.OrderDao;
-import org.icet.learn.repository.ProductDao;
-import org.icet.learn.repository.UserDao;
+import org.icet.learn.exceptions.ValidationException;
+import org.icet.learn.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +31,8 @@ public class CartServiceImpl implements CartService{
     private final CartItemDao cartItemDao;
 
     private final ProductDao productDao ;
+
+    private final CouponDao couponDao;
 
     @Transactional
     public ResponseEntity<?> addProductToCart(AddProductInCart addProductInCart) {
@@ -99,8 +97,39 @@ public class CartServiceImpl implements CartService{
         orderDto.setDiscount(activeOrder.getDiscount());
         orderDto.setTotalAmount(activeOrder.getTotalAmount());
         orderDto.setCartItems(cartItemsDtoList);
+        if (activeOrder.getCoupon() != null) {
+            orderDto.setCouponName(activeOrder.getCoupon().getName());
+        }
 
         return orderDto;
+    }
+
+    public Order applyCoupon(Long userId, String code) {
+        OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
+
+        CouponEntity coupon = couponDao.findByCode(code)
+                .orElseThrow(() -> new ValidationException("Coupon not found."));
+
+        if (couponIsExpired(coupon)) {
+            throw new ValidationException("Coupon has expired.");
+        }
+
+        double discountAmount = ((coupon.getDiscount() / 100.0) * activeOrder.getTotalAmount());
+        double netAmount = activeOrder.getTotalAmount() - discountAmount;
+
+        activeOrder.setAmount((long) netAmount);
+        activeOrder.setDiscount((long) discountAmount);
+        activeOrder.setCoupon(coupon);
+
+        orderDao.save(activeOrder);
+
+        return activeOrder.getOrderDto();
+    }
+
+    private boolean couponIsExpired(CouponEntity coupon) {
+        Date currentDate = new Date();
+        Date expirationDate = coupon.getExpirationDate();
+        return currentDate.after(expirationDate);
     }
 
 }
