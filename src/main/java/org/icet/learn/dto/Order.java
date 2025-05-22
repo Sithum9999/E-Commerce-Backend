@@ -35,4 +35,6 @@ public class Order {
     private String username;
 
     private List<CartItem> cartItems;
+
+    private String couponName;
 }
