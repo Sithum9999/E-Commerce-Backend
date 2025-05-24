@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.Order;
+import org.icet.learn.dto.PlaceOrder;
 import org.icet.learn.exceptions.ValidationException;
 import org.icet.learn.service.customer.cart.CartService;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,11 @@ public class CartController {
     @PostMapping("/deduction")
     public ResponseEntity<Order> decreaseProductQuantity(@RequestBody AddProductInCart addProductInCart) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.decreaseProductQuantity(addProductInCart));
+    }
+
+    @PostMapping("/placeOrder")
+    public ResponseEntity<Order> placeOrder(@RequestBody PlaceOrder placeOrder) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placeOrder(placeOrder));
     }
 
 }
