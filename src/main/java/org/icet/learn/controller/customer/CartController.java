@@ -45,4 +45,9 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.increaseProductQuantity(addProductInCart));
     }
 
+    @PostMapping("/deduction")
+    public ResponseEntity<Order> decreaseProductQuantity(@RequestBody AddProductInCart addProductInCart) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.decreaseProductQuantity(addProductInCart));
+    }
+
 }
