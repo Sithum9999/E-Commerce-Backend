@@ -163,4 +163,36 @@ public class CartServiceImpl implements CartService{
             }
             return null;
         }
+
+    public Order decreaseProductQuantity(AddProductInCart addProductInCart) {
+        OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(addProductInCart.getUserId(), OrderStatus.Pending);
+        Optional<ProductEntity> optionalProduct = productDao.findById(addProductInCart.getProductId());
+
+        Optional<CartItemsEntity> optionalCartItem = cartItemDao.findByProductIdAndOrderIdAndUserId(
+                addProductInCart.getProductId(), activeOrder.getId(), addProductInCart.getUserId()
+        );
+
+        if (optionalProduct.isPresent() && optionalCartItem.isPresent()) {
+            CartItemsEntity cartItem = optionalCartItem.get();
+            ProductEntity product = optionalProduct.get();
+
+            activeOrder.setAmount(activeOrder.getAmount() - product.getPrice());
+            activeOrder.setTotalAmount(activeOrder.getTotalAmount() - product.getPrice());
+
+            cartItem.setQuantity(cartItem.getQuantity() - 1);
+
+            if (activeOrder.getCoupon() != null) {
+                double discountAmount = ((activeOrder.getDiscount() / 100.0) * activeOrder.getTotalAmount());
+                double netAmount = activeOrder.getTotalAmount() - discountAmount;
+
+                activeOrder.setAmount((long) netAmount);
+                activeOrder.setDiscount((long) discountAmount);
+            }
+
+            cartItemDao.save(cartItem);
+            orderDao.save(activeOrder);
+            return activeOrder.getOrderDto();
+        }
+        return null;
+    }
     }
