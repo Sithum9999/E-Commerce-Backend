@@ -14,4 +14,6 @@ public interface CartService {
 
     Order increaseProductQuantity(AddProductInCart addProductInCart);
 
+    Order decreaseProductQuantity(AddProductInCart addProductInCart);
+
 }
