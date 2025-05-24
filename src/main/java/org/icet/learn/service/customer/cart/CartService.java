@@ -2,6 +2,7 @@ package org.icet.learn.service.customer.cart;
 
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.Order;
+import org.icet.learn.dto.PlaceOrder;
 import org.springframework.http.ResponseEntity;
 
 public interface CartService {
@@ -15,5 +16,7 @@ public interface CartService {
     Order increaseProductQuantity(AddProductInCart addProductInCart);
 
     Order decreaseProductQuantity(AddProductInCart addProductInCart);
+
+    Order placeOrder(PlaceOrder placeOrder);
 
 }
