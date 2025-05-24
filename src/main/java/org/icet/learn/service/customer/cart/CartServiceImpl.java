@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.AddProductInCart;
 import org.icet.learn.dto.CartItem;
 import org.icet.learn.dto.Order;
+import org.icet.learn.dto.PlaceOrder;
 import org.icet.learn.entity.*;
 import org.icet.learn.enums.OrderStatus;
 import org.icet.learn.exceptions.ValidationException;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -195,4 +197,29 @@ public class CartServiceImpl implements CartService{
         }
         return null;
     }
+
+    public Order placeOrder(PlaceOrder placeOrder) {
+        OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(placeOrder.getUserId(), OrderStatus.Pending);
+        Optional<UserEntity> optionalUser = userDao.findById(placeOrder.getUserId());
+        if (optionalUser.isPresent()) {
+            activeOrder.setOrderDescription(placeOrder.getOrderDescription());
+            activeOrder.setAddress(placeOrder.getAddress());
+            activeOrder.setDate(new Date());
+            activeOrder.setOrderStatus(OrderStatus.Placed);
+            activeOrder.setTrackingId(UUID.randomUUID());
+
+            orderDao.save(activeOrder);
+
+            OrderEntity order = new OrderEntity();
+            order.setAmount(0L);
+            order.setTotalAmount(0L);
+            order.setDiscount(0L);
+            order.setUser(optionalUser.get());
+            order.setOrderStatus(OrderStatus.Pending);
+            orderDao.save(order);
+
+            return activeOrder.getOrderDto();
+        }
+        return null;
     }
+}
