@@ -225,4 +225,10 @@ public class CartServiceImpl implements CartService{
         }
     }
 
+    public List<Order> getMyPlacedOrders(Long userId) {
+        return orderDao.findByUserIdAndOrderStatusIn(userId, List.of(OrderStatus.Placed, OrderStatus.Shipped, OrderStatus.Delivered))
+                .stream()
+                .map(OrderEntity::getOrderDto)
+                .collect(Collectors.toList());
+    }
 }

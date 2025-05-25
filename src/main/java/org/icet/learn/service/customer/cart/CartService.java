@@ -5,6 +5,8 @@ import org.icet.learn.dto.Order;
 import org.icet.learn.dto.PlaceOrder;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface CartService {
 
     ResponseEntity<?> addProductToCart(AddProductInCart addProductInCart);
@@ -18,5 +20,7 @@ public interface CartService {
     Order decreaseProductQuantity(AddProductInCart addProductInCart);
 
     Order placeOrder(PlaceOrder placeOrder);
+
+    List<Order> getMyPlacedOrders(Long userId);
 
 }
