@@ -53,6 +53,7 @@ public class CartController {
 
     @PostMapping("/placeOrder")
     public ResponseEntity<Order> placeOrder(@RequestBody PlaceOrder placeOrder) {
+        log.info("Placed Order: "+placeOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placeOrder(placeOrder));
     }
 
