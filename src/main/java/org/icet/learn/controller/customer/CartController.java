@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/customer")
 @RequiredArgsConstructor
@@ -56,5 +58,11 @@ public class CartController {
         log.info("Placed Order: "+placeOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placeOrder(placeOrder));
     }
+
+    @GetMapping("/myOrders/{userId}")
+    public ResponseEntity<List<Order>> getMyPlacedOrders(@PathVariable Long userId){
+        return ResponseEntity.ok(cartService.getMyPlacedOrders(userId));
+    }
+
 
 }
