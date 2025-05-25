@@ -116,12 +116,8 @@ public class CartServiceImpl implements CartService{
             throw new ValidationException("Coupon has expired.");
         }
 
-        double discountAmount = ((coupon.getDiscount() / 100.0) * activeOrder.getTotalAmount());
-        double netAmount = activeOrder.getTotalAmount() - discountAmount;
-
-        activeOrder.setAmount((long) netAmount);
-        activeOrder.setDiscount((long) discountAmount);
         activeOrder.setCoupon(coupon);
+        recalculateAmountWithDiscount(activeOrder);
 
         orderDao.save(activeOrder);
 
@@ -152,11 +148,7 @@ public class CartServiceImpl implements CartService{
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
 
                 if (activeOrder.getCoupon() != null) {
-                    double discountAmount = ((activeOrder.getDiscount() / 100.0) * activeOrder.getTotalAmount());
-                    double netAmount = activeOrder.getTotalAmount() - discountAmount;
-
-                    activeOrder.setAmount((long) netAmount);
-                    activeOrder.setDiscount((long) discountAmount);
+                    recalculateAmountWithDiscount(activeOrder);
                 }
 
                 cartItemDao.save(cartItem);
@@ -169,7 +161,6 @@ public class CartServiceImpl implements CartService{
     public Order decreaseProductQuantity(AddProductInCart addProductInCart) {
         OrderEntity activeOrder = orderDao.findByUserIdAndOrderStatus(addProductInCart.getUserId(), OrderStatus.Pending);
         Optional<ProductEntity> optionalProduct = productDao.findById(addProductInCart.getProductId());
-
         Optional<CartItemsEntity> optionalCartItem = cartItemDao.findByProductIdAndOrderIdAndUserId(
                 addProductInCart.getProductId(), activeOrder.getId(), addProductInCart.getUserId()
         );
@@ -184,17 +175,14 @@ public class CartServiceImpl implements CartService{
             cartItem.setQuantity(cartItem.getQuantity() - 1);
 
             if (activeOrder.getCoupon() != null) {
-                double discountAmount = ((activeOrder.getDiscount() / 100.0) * activeOrder.getTotalAmount());
-                double netAmount = activeOrder.getTotalAmount() - discountAmount;
-
-                activeOrder.setAmount((long) netAmount);
-                activeOrder.setDiscount((long) discountAmount);
+                recalculateAmountWithDiscount(activeOrder);
             }
 
             cartItemDao.save(cartItem);
             orderDao.save(activeOrder);
             return activeOrder.getOrderDto();
         }
+
         return null;
     }
 
@@ -222,4 +210,19 @@ public class CartServiceImpl implements CartService{
         }
         return null;
     }
+
+    private void recalculateAmountWithDiscount(OrderEntity order) {
+        if (order.getCoupon() != null) {
+            double discountPercentage = order.getCoupon().getDiscount(); // e.g., 50%
+            double discountAmount = (discountPercentage / 100.0) * order.getTotalAmount();
+            double netAmount = order.getTotalAmount() - discountAmount;
+
+            order.setAmount((long) netAmount);
+            order.setDiscount((long) discountAmount);
+        } else {
+            order.setAmount(order.getTotalAmount());
+            order.setDiscount(0L);
+        }
+    }
+
 }
