@@ -9,6 +9,11 @@ import java.util.List;
 
 @Repository
 public interface OrderDao extends JpaRepository<OrderEntity, Long> {
+
     OrderEntity findByUserIdAndOrderStatus(Long userId, OrderStatus orderStatus);
+
     List<OrderEntity> findAllByOrderStatusIn(List<OrderStatus> orderStatusList);
+
+    List<OrderEntity> findByUserIdAndOrderStatusIn(Long userId, List<OrderStatus> orderStatus);
+
 }
