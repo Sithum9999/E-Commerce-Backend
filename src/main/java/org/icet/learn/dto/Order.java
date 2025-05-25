@@ -1,6 +1,6 @@
 package org.icet.learn.dto;
 
-import jakarta.persistence.*;
+
 import lombok.Data;
 import org.icet.learn.enums.OrderStatus;
 
@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Data
 public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private String orderDescription;
