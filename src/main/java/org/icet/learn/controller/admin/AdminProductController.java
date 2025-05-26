@@ -52,4 +52,14 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(faqService.postFAQ(productId, faq));
     }
 
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
+        Product productDto = adminProductService.getProductById(productId);
+        if (productDto != null) {
+            return ResponseEntity.ok(productDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

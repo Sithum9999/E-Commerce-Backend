@@ -53,4 +53,34 @@ public class AdminProductServiceImpl implements AdminProductService {
         return false;
     }
 
+    public Product getProductById(Long productId) {
+        Optional<ProductEntity> optionalProduct = productDao.findById(productId);
+        if (optionalProduct.isPresent()) {
+            return optionalProduct.get().getDto();
+        } else {
+            return null;
+        }
+    }
+
+    public Product updateProduct(Long productId, Product productDto) throws IOException {
+        Optional<ProductEntity> optionalProduct = productDao.findById(productId);
+        Optional<CategoryEntity> optionalCategory = categoryDao.findById(productDto.getCategoryId());
+
+        if (optionalProduct.isPresent() && optionalCategory.isPresent()) {
+            ProductEntity product = optionalProduct.get();
+
+            product.setName(productDto.getName());
+            product.setPrice(productDto.getPrice());
+            product.setDescription(productDto.getDescription());
+            product.setCategoryEntity(optionalCategory.get());
+            if (productDto.getImg() != null) {
+                product.setImg(productDto.getImg().getBytes());
+            }
+
+            return productDao.save(product).getDto();
+        } else {
+            return null;
+        }
+    }
+
 }
