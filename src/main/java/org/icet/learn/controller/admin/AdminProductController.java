@@ -1,7 +1,9 @@
 package org.icet.learn.controller.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.icet.learn.dto.Faq;
 import org.icet.learn.dto.Product;
+import org.icet.learn.service.admin.faq.FaqService;
 import org.icet.learn.service.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
+    private final FaqService faqService;
 
     @PostMapping("/product")
     public ResponseEntity<Product> addProduct(@ModelAttribute Product product) throws IOException {
@@ -42,6 +45,11 @@ public class AdminProductController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/faq/{productId}")
+    public ResponseEntity<Faq> postFAQ(@PathVariable Long productId, @RequestBody Faq faq) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.postFAQ(productId, faq));
     }
 
 }
