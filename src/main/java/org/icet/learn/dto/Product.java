@@ -22,4 +22,6 @@ public class Product {
 
     private MultipartFile img;
 
+    private Long quantity;
+
 }
