@@ -3,12 +3,13 @@ package org.icet.learn.controller.customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.icet.learn.dto.OrderedProductsResponse;
+import org.icet.learn.dto.Review;
 import org.icet.learn.service.customer.review.ReviewService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -21,6 +22,15 @@ public class ReviewController {
     @GetMapping("/ordered-products/{orderId}")
     public ResponseEntity<OrderedProductsResponse> getOrderedProductsDetailsByOrderId(@PathVariable Long orderId) {
         return ResponseEntity.ok(reviewService.getOrderedProductsDetailsByOrderId(orderId));
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<?> giveReview(@ModelAttribute Review reviewDto) throws IOException {
+        Review reviewDto1 = reviewService.giveReview(reviewDto);
+        if (reviewDto1 == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewDto);
     }
 
 }

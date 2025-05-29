@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.icet.learn.dto.Review;
 
 @Entity
 @Data
@@ -31,5 +32,19 @@ public class ReviewEntity {
     @JoinColumn(name = "product_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity product;
+
+    public Review getDto() {
+        Review reviewDto = new Review();
+
+        reviewDto.setId(id);
+        reviewDto.setRating(rating);
+        reviewDto.setDescription(description);
+        reviewDto.setReturnedImg(img);
+        reviewDto.setProductId(product.getId());
+        reviewDto.setUserId(user.getId());
+        reviewDto.setUsername(user.getName());
+
+        return reviewDto;
+    }
 
 }
