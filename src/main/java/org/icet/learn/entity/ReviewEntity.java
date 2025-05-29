@@ -8,6 +8,7 @@ import org.icet.learn.dto.Review;
 
 @Entity
 @Data
+@Table(name = "review")
 public class ReviewEntity {
 
     @Id
