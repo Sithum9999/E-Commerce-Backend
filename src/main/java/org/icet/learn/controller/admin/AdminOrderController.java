@@ -1,6 +1,7 @@
 package org.icet.learn.controller.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.icet.learn.dto.AnalyticsResponse;
 import org.icet.learn.dto.Order;
 import org.icet.learn.service.admin.order.AdminOrderService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,11 @@ public class AdminOrderController {
             return new ResponseEntity<>("Something went wrong!", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+
+    @GetMapping("/order/analytics")
+    public ResponseEntity<AnalyticsResponse> getAnalytics() {
+        return ResponseEntity.ok(adminOrderService.calculateAnalytics());
     }
 
 }
