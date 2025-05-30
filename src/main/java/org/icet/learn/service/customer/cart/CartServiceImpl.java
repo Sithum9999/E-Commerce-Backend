@@ -231,4 +231,12 @@ public class CartServiceImpl implements CartService{
                 .map(OrderEntity::getOrderDto)
                 .collect(Collectors.toList());
     }
+
+    public Order searchOrderByTrackingId(UUID trackingId) {
+        Optional<OrderEntity> optionalOrder = orderDao.findByTrackingId(trackingId);
+        if (optionalOrder.isPresent()){
+            return optionalOrder.get().getOrderDto();
+        }
+        return null;
+    }
 }

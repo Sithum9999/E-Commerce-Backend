@@ -6,6 +6,7 @@ import org.icet.learn.dto.PlaceOrder;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CartService {
 
@@ -22,5 +23,7 @@ public interface CartService {
     Order placeOrder(PlaceOrder placeOrder);
 
     List<Order> getMyPlacedOrders(Long userId);
+
+    Order searchOrderByTrackingId(UUID trackingId);
 
 }
