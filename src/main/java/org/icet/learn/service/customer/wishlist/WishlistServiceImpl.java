@@ -10,7 +10,9 @@ import org.icet.learn.repository.UserDao;
 import org.icet.learn.repository.WishlistDao;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,12 @@ public class WishlistServiceImpl implements WishlistService {
         }
 
         return null;
+    }
+
+    public List<Wishlist> getWishlistByUserId(Long userId) {
+        return wishlistDao.findAllByUserId(userId).stream()
+                .map(WishlistEntity::getWishlistDto)
+                .collect(Collectors.toList());
     }
 
 }
