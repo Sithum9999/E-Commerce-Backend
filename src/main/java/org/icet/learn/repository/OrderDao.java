@@ -24,4 +24,5 @@ public interface OrderDao extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByDateBetweenAndOrderStatus(Date startOfMonth, Date endOfMonth, OrderStatus status);
 
     Long countByOrderStatus(OrderStatus status);
+
 }

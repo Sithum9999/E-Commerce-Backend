@@ -8,6 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface CouponDao extends JpaRepository<CouponEntity, Long> {
+
     boolean existsByCode(String code);
+
     Optional<CouponEntity> findByCode(String code);
+
 }

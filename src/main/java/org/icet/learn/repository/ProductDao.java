@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ProductDao extends JpaRepository<ProductEntity,Long> {
+
     List<ProductEntity> findAllByNameContaining(String title);
+
 }

@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface FaqDao extends JpaRepository<FaqEntity, Long> {
-
     List<FaqEntity> findAllByProductId(Long productsId);
-
 }

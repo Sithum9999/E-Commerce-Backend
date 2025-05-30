@@ -32,5 +32,4 @@ public class WishlistController {
         return ResponseEntity.ok(wishlistService.getWishlistByUserId(userId));
     }
 
-
 }
